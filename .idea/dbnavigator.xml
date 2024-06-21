@@ -39,24 +39,123 @@ insert into emplooyes2 (username,surname,salary,workhours,gmail)
     values ('Aslan','Yusubov',4000,220,'aslnayusubov@gmail.com');
     
     
-update emplooyes2 set salary = 5000 where username = 'Zaman']]></console>
+update emplooyes2 set salary = 5000 where username = 'Zaman'
+
+ALTER TABLE emplooyes2
+ ADD department CHAR;]]></console>
+    </connection>
+    <connection id="58928b13-2341-475f-9ffd-470f9ce9b1c8">
+      <console name="Connection 1" type="STANDARD" schema="public" session="Main"><![CDATA[create table worker(
+    id          bigserial primary key,
+    username    varchar(256) ,
+    surname     varchar(256),
+    birth_day   date,
+    salary      int4
+    
+
+);
+
+insert into worker(username,surname,salary,department) values ('Cefer','Mehtiyev',5000,'{Engineering manager}');
+insert into worker(username,surname,salary,department) values ('Zaman','Eliyev',4000,'{Frontend devoloper}');
+insert into worker(username,surname,salary,department) values ('Nadir','Rza',5500,'{Database manager}');
+insert into worker(username,surname,salary,department) values ('Aslan','Yusubov',8800,'{Devops manager}');
+
+select * from worker order by id desc limit 1;
+
+
+select * from worker where username in ('Cefer','Zaman','Abbas');
+select * from worker where username not in ('Cefer','Zaman','Abbas');
+
+select * from worker where username like '%la%';
+
+create table departments (
+    id      bigserial primary  key ,
+    departments_name    varchar(256)
+);
+
+insert into departments (departments_name) values ('IT');
+insert into departments (departments_name) values ('HR');
+insert into departments (departments_name) values ('Devops');
+
+select username from worker union  select departments_name from departments;
+
+
+create table company_profits(
+    id              bigserial primary key ,
+    company_name    varchar(256),
+    year            int,
+    money_turnover  decimal 
+)
+
+create table countries(
+    id              bigserial primary key ,
+    country_name    varchar(256),
+    budget          decimal 
+)
+
+select count(country_name)  from countries where budget>500;
+
+select avg(budget) from countries;
+
+select sum(budget) from  countries;
+
+select year,sum(money_turnover) from company_profits group by year;
+
+select year ,sum(money_turnover) from company_profits group by year having sum(money_turnover) >3500;
+
+create table customers(
+    id               serial primary key ,
+    customer_name    varchar(256),
+    contact_name     varchar(256),
+    country          varchar(256) 
+);
+
+create table orders(
+    id              serial primary key ,
+    customers_id    integer references customers(id),
+    orders_date            DATE 
+);
+
+select o.orders_date from orders o ,customers c where  o.customers_id = c.id;
+
+select  o.orders_date, c.customer_name,c.contact_name from orders o inner join customers c on o.customers_id = c.id;
+
+select  o.orders_date, c.customer_name,c.contact_name from orders o left join customers c on o.customers_id = c.id;
+
+select  o.orders_date, c.customer_name,c.contact_name from orders o right join customers c on o.customers_id = c.id;
+
+select  o.id, c.customer_name,c.country from orders o full join customers c on o.customers_id = c.id;
+
+select  o.id, c.customer_name from orders o cross join customers c;
+
+create sequence next_id increment 5 start 100;
+
+create table users(
+    id              integer primary key default nextval('next_id') ,
+    username        varchar(256) 
+);
+
+
+insert into users(username) values ('cefer');]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="58928b13-2341-475f-9ffd-470f9ce9b1c8" object-ref="schemas/public/tables/departments" />
+      <object connection-id="58928b13-2341-475f-9ffd-470f9ce9b1c8" object-ref="schemas/public/tables/customers" />
+      <object connection-id="58928b13-2341-475f-9ffd-470f9ce9b1c8" object-ref="schemas/public/tables/company_profits" />
+      <object connection-id="58928b13-2341-475f-9ffd-470f9ce9b1c8" object-ref="schemas/public/tables/users" />
+      <object connection-id="58928b13-2341-475f-9ffd-470f9ce9b1c8" object-ref="schemas/public/tables/worker" />
+      <object connection-id="58928b13-2341-475f-9ffd-470f9ce9b1c8" object-ref="schemas/public/tables/orders" />
+      <object connection-id="58928b13-2341-475f-9ffd-470f9ce9b1c8" object-ref="schemas/public/tables/countries" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="708c7d23-d8ed-4f38-a7a6-ffa00be93a59" />
-  </component>
-  <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="708c7d23-d8ed-4f38-a7a6-ffa00be93a59" dataset="public.emplooyes2" active-filter-id="EMPTY_FILTER">
-      <filter id="a03ec934-ff44-4187-b47d-6e18c0cc57ee" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
+    <connection id="58928b13-2341-475f-9ffd-470f9ce9b1c8" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
@@ -64,6 +163,9 @@ update emplooyes2 set salary = 5000 where username = 'Zaman']]></console>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />
+  </component>
+  <component name="DBNavigator.Project.ScriptExecutionManager" clear-outputs="true">
+    <recently-used-interfaces />
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
@@ -81,6 +183,100 @@ update emplooyes2 set salary = 5000 where username = 'Zaman']]></console>
           <host value="localhost" />
           <port value="5433" />
           <database value="consumer" />
+          <tns-folder value="" />
+          <tns-profile value="" />
+          <type value="USER_PASSWORD" />
+          <user value="postgres" />
+          <deprecated-pwd value="akB2YWNlZmVyMjAwNQ==" />
+        </database>
+        <properties>
+          <auto-commit value="false" />
+        </properties>
+        <ssh-settings>
+          <active value="false" />
+          <proxy-host value="" />
+          <proxy-port value="22" />
+          <proxy-user value="" />
+          <deprecated-proxy-pwd value="" />
+          <auth-type value="PASSWORD" />
+          <key-file value="" />
+          <key-passphrase value="" />
+        </ssh-settings>
+        <ssl-settings>
+          <active value="false" />
+          <certificate-authority-file value="" />
+          <client-certificate-file value="" />
+          <client-key-file value="" />
+        </ssl-settings>
+        <details>
+          <charset value="UTF-8" />
+          <session-management value="true" />
+          <ddl-file-binding value="true" />
+          <database-logging value="true" />
+          <connect-automatically value="true" />
+          <restore-workspace value="true" />
+          <restore-workspace-deep value="false" />
+          <environment-type value="default" />
+          <connectivity-timeout value="30" />
+          <idle-time-to-disconnect value="30" />
+          <idle-time-to-disconnect-pool value="5" />
+          <credential-expiry-time value="10" />
+          <max-connection-pool-size value="7" />
+          <alternative-statement-delimiter value="" />
+        </details>
+        <debugger>
+          <compile-dependencies value="true" />
+          <tcp-driver-tunneling value="false" />
+          <tcp-host-address value="" />
+          <tcp-port-from value="4000" />
+          <tcp-port-to value="4999" />
+          <debugger-type value="ASK" />
+        </debugger>
+        <object-filters hide-empty-schemas="false" hide-pseudo-columns="false" hide-audit-columns="false">
+          <object-filters />
+          <object-type-filter use-master-settings="true">
+            <object-type name="SCHEMA" enabled="true" />
+            <object-type name="USER" enabled="true" />
+            <object-type name="ROLE" enabled="true" />
+            <object-type name="PRIVILEGE" enabled="true" />
+            <object-type name="CHARSET" enabled="true" />
+            <object-type name="TABLE" enabled="true" />
+            <object-type name="VIEW" enabled="true" />
+            <object-type name="MATERIALIZED_VIEW" enabled="true" />
+            <object-type name="NESTED_TABLE" enabled="true" />
+            <object-type name="COLUMN" enabled="true" />
+            <object-type name="INDEX" enabled="true" />
+            <object-type name="CONSTRAINT" enabled="true" />
+            <object-type name="DATASET_TRIGGER" enabled="true" />
+            <object-type name="DATABASE_TRIGGER" enabled="true" />
+            <object-type name="SYNONYM" enabled="true" />
+            <object-type name="SEQUENCE" enabled="true" />
+            <object-type name="PROCEDURE" enabled="true" />
+            <object-type name="FUNCTION" enabled="true" />
+            <object-type name="PACKAGE" enabled="true" />
+            <object-type name="TYPE" enabled="true" />
+            <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+            <object-type name="ARGUMENT" enabled="true" />
+            <object-type name="DIMENSION" enabled="true" />
+            <object-type name="CLUSTER" enabled="true" />
+            <object-type name="DBLINK" enabled="true" />
+          </object-type-filter>
+        </object-filters>
+      </connection>
+      <connection id="58928b13-2341-475f-9ffd-470f9ce9b1c8" active="true" signed="true">
+        <database>
+          <name value="Connection 1" />
+          <description value="" />
+          <database-type value="POSTGRES" />
+          <config-type value="BASIC" />
+          <database-version value="15.7" />
+          <driver-source value="BUNDLED" />
+          <driver-library value="" />
+          <driver value="" />
+          <url-type value="DATABASE" />
+          <host value="localhost" />
+          <port value="5433" />
+          <database value="dbcar" />
           <tns-folder value="" />
           <tns-profile value="" />
           <type value="USER_PASSWORD" />
